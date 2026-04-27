@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SCOPE-X 进展</title>
+  <link rel="stylesheet" href="./shared.css" />
+  <style>
+    .compact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .compact-item {
+      border-radius: 10px;
+      padding: 10px 12px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.10);
+    }
+    .compact-item h4 {
+      margin: 0 0 4px;
+      font-family: var(--font-serif);
+      font-size: clamp(12px, 1.2vw, 15px);
+      font-weight: 500;
+      color: var(--ivory);
+    }
+    .compact-item p, .compact-item li {
+      margin: 0;
+      font-size: clamp(10px, 1vw, 13px);
+      line-height: 1.5;
+      color: rgba(255,255,255,0.65);
+    }
+    .compact-item ul {
+      padding-left: 1rem;
+      margin: 0;
+    }
+    .tag-bar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    .tag-chip {
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      font-size: clamp(10px, 0.9vw, 12px);
+      color: rgba(255,255,255,0.75);
+    }
+    .tag-chip.ok { border-color: rgba(74,222,128,0.35); color: #4ade80; }
+    .tag-chip.pending { border-color: rgba(251,191,36,0.35); color: #fbbf24; }
+  </style>
+</head>
+<body class="theme-linear">
+  <div class="card" style="padding: 36px 48px 32px;">
+    <div class="tag">研究进展</div>
+    <h1 style="margin: 8px 0 4px; font-size: clamp(26px, 3vw, 38px);">SCOPE-X 进展</h1>
+    <p class="lead" style="font-size: clamp(14px, 1.5vw, 18px); margin: 0 0 12px;">当前阶段成果</p>
+
+    <div class="compact-grid">
+      <div class="compact-item">
+        <h4>模型架构</h4>
+        <ul>
+          <li>BERT 编码器 + 模态解码器</li>
+          <li>基因/peak token 化（变长输入）</li>
+          <li>预训练：MGP + CMR</li>
+        </ul>
+      </div>
+      <div class="compact-item">
+        <h4>Phase 1 完成</h4>
+        <ul>
+          <li>数据：2M+ 细胞（scMultiome）</li>
+          <li>聚类 ARI：<strong style="color:#4ade80;">0.87</strong></li>
+          <li>跨模态预测：<strong style="color:#4ade80;">84.6%</strong></li>
+        </ul>
+      </div>
+      <div class="compact-item">
+        <h4>预训练计划</h4>
+        <ul>
+          <li><span class="tag-chip ok">✅</span> Phase 1 — 2M 细胞</li>
+          <li><span class="tag-chip pending">⏳</span> Phase 2 — 4M+ scPaired</li>
+          <li><span class="tag-chip pending">⏳</span> Phase 3 — 图先验</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="bottom" style="margin-top: 12px; font-size: clamp(12px, 1.2vw, 15px);">
+      <strong>下一步：</strong>完成 Phase 2/3 多组学联合预训练，开展下游任务评估
+    </div>
+  </div>
+
+  <textarea id="speaker-notes" style="display:none">接下来汇报SCOPE-X的最新进展。在模型架构方面，我们采用了BERT编码器加模态特异性解码器的设计，支持基因和peak的token化处理，能够处理变长输入。预训练任务包括掩码基因预测和跨模态重建两个主要任务。在预训练进展方面，Phase 1已经完成，使用了超过两百万的RNA加ATAC多组学细胞数据。Phase 2和Phase 3正在计划中，将分别使用四百万paired数据和图先验知识。初步结果显示，Phase 1的细胞类型聚类ARI达到了0.87，跨模态预测准确率达到84.6%。下一步我们将完成Phase 2和Phase 3的多组学联合预训练，并开展下游任务评估。</textarea>
+</body>
+</html>

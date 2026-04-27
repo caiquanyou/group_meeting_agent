@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AGENT CONTROL // PPT PILOT</title>
+  <style>
+    :root {
+      --bg-void: #080706;
+      --bg-deep: #0d0c0b;
+      --bg-dark: #141413;
+      --bg-surface: #1c1a18;
+      --bg-panel: #201e1b;
+      --glow: #c96442;
+      --glow-bright: #d97757;
+      --glow-dim: rgba(201,100,66,0.3);
+      --glow-faint: rgba(201,100,66,0.1);
+      --amber: #f59e0b;
+      --green: #22c55e;
+      --red: #ef4444;
+      --blue: #3898ec;
+      --text-bright: #faf9f5;
+      --text-main: #d4d2cc;
+      --text-dim: #b0aea5;
+      --text-muted: #5e5d59;
+      --border: rgba(201,100,66,0.2);
+      --border-bright: rgba(201,100,66,0.5);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      height: 100vh;
+      background-color: var(--bg-void);
+      background-image:
+        linear-gradient(rgba(201,100,66,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,100,66,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      font-family: monospace;
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .scanlines {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9998;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.03) 2px,
+        rgba(0,0,0,0.03) 4px
+      );
+    }
+
+    .app {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      padding: 12px;
+      gap: 10px;
+      overflow: hidden;
+    }
+
+    /* ── HEADER ── */
+    .hud-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      padding: 0 4px;
+    }
+
+    .header-left { display: flex; flex-direction: column; gap: 2px; }
+
+    .system-id {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sys-tag {
+      font-size: 9px;
+      letter-spacing: 2px;
+      color: var(--bg-dark);
+      background: var(--glow);
+      padding: 2px 6px;
+      font-weight: 700;
+    }
+
+    .system-id h1 {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: var(--text-bright);
+      text-transform: uppercase;
+    }
+
+    .header-subtitle {
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      color: var(--text-muted);
+      padding-left: 2px;
+    }
+
+    .status-group {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .hud-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 5px 12px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      font-size: 11px;
+      letter-spacing: 0.5px;
+      color: var(--text-dim);
+      clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+    }
+
+    .hud-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    .hud-dot.ok  { background: var(--green); box-shadow: 0 0 6px var(--green); animation: pulse-dot 2s infinite; }
+    .hud-dot.live{ background: var(--amber); box-shadow: 0 0 6px var(--amber); animation: pulse-dot 1s infinite; }
+    .hud-dot.off { background: var(--text-muted); }
+
+    @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+    /* ── LAYOUT ── */
+    .hud-layout {
+      display: flex;
+      flex: 1;
+      gap: 10px;
+      overflow: hidden;
+    }
+
+    .hud-left {
+      width: 380px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      overflow-y: auto;
+    }
+
+    .hud-right {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      overflow: hidden;
+    }
+
+    /* ── PANELS ── */
+    .hud-panel {
+      position: relative;
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      padding: 14px;
+    }
+
+    .hud-panel::before {
+      content: '';
+      position: absolute;
+      top: -1px; left: -1px;
+      width: 10px; height: 10px;
+      border-top: 2px solid var(--glow);
+      border-left: 2px solid var(--glow);
+    }
+
+    .hud-panel::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; right: -1px;
+      width: 10px; height: 10px;
+      border-bottom: 2px solid var(--glow);
+      border-right: 2px solid var(--glow);
+    }
+
+    .panel-label {
+      font-family: monospace;
+      font-size: 9px;
+      letter-spacing: 2.5px;
+      color: var(--glow);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+
+    .panel-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--glow-dim), transparent);
+    }
+
+    /* ── FORM ELEMENTS ── */
+    select, input[type="text"], textarea {
+      width: 100%;
+      background: var(--bg-deep);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      font-family: monospace;
+      font-size: 12px;
+      padding: 7px 10px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      border-radius: 0;
+    }
+
+    select:focus, input[type="text"]:focus, textarea:focus {
+      border-color: var(--glow);
+      box-shadow: 0 0 8px var(--glow-faint);
+    }
+
+    select { height: 34px; cursor: pointer; }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    label {
+      display: block;
+      font-size: 10px;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+
+    .field { margin-bottom: 10px; }
+    .field:last-child { margin-bottom: 0; }
+
+    /* ── SWITCH ── */
+    .switch-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .switch-hint strong {
+      display: block;
+      font-size: 12px;
+      color: var(--text-main);
+      margin-bottom: 2px;
+      font-family: monospace;
+    }
+
+    .switch-hint span {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-family: monospace;
+    }
+
+    .switch {
+      position: relative;
+      width: 40px;
+      height: 22px;
+      flex-shrink: 0;
+    }
+
+    .switch input {
+      appearance: none;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      background: var(--bg-deep);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all 0.3s;
+      border-radius: 0;
+    }
+
+    .switch input:checked {
+      background: rgba(201,100,66,0.2);
+      border-color: var(--glow);
+      box-shadow: 0 0 8px var(--glow-dim);
+    }
+
+    .switch input::after {
+      content: '';
+      position: absolute;
+      top: 3px; left: 3px;
+      width: 14px; height: 14px;
+      background: var(--text-muted);
+      transition: transform 0.3s, background 0.3s;
+    }
+
+    .switch input:checked::after {
+      transform: translateX(18px);
+      background: var(--glow);
+      box-shadow: 0 0 6px var(--glow);
+    }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 36px;
+      border: 1px solid;
+      font-family: monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: all 0.15s;
+      background: transparent;
+      border-radius: 0;
+    }
+
+    .btn:active:not(:disabled) { transform: scale(0.97); }
+    .btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    .btn.start { color: var(--green); border-color: rgba(34,197,94,0.4); }
+    .btn.start:hover { box-shadow: 0 0 12px rgba(34,197,94,0.2); border-color: rgba(34,197,94,0.7); }
+
+    .btn.resume { color: var(--blue); border-color: rgba(56,152,236,0.4); }
+    .btn.resume:hover { box-shadow: 0 0 12px rgba(56,152,236,0.2); border-color: rgba(56,152,236,0.7); }
+
+    .btn.stop { color: var(--red); border-color: rgba(239,68,68,0.4); }
+    .btn.stop:hover { box-shadow: 0 0 12px rgba(239,68,68,0.2); border-color: rgba(239,68,68,0.7); }
+
+    .btn.finish { color: var(--glow); border-color: var(--glow-dim); }
+    .btn.finish:hover { box-shadow: 0 0 12px var(--glow-faint); border-color: var(--glow-bright); }
+
+    .btn.btn-light { color: var(--text-dim); border-color: var(--border); }
+    .btn.btn-light:hover { border-color: var(--border-bright); }
+
+    .btn.btn-primary { color: var(--glow-bright); border-color: var(--glow); background: rgba(201,100,66,0.08); }
+    .btn.btn-primary:hover { background: rgba(201,100,66,0.15); box-shadow: 0 0 16px var(--glow-dim); }
+
+    .btn.wide { width: 100%; }
+
+    .button-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    /* ── PTT ── */
+    .ptt-panel { }
+
+    .ptt-round {
+      width: 100%;
+      height: 72px;
+      border: 1px solid;
+      font-family: monospace;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.2s;
+      border-radius: 0;
+    }
+
+    .ptt-round.start {
+      border-color: var(--glow-dim);
+      background: rgba(201,100,66,0.06);
+      color: var(--glow-bright);
+    }
+
+    .ptt-round.start:hover {
+      border-color: var(--glow);
+      box-shadow: 0 0 20px var(--glow-dim);
+    }
+
+    .ptt-round.stop {
+      border-color: rgba(239,68,68,0.6);
+      background: rgba(239,68,68,0.08);
+      color: var(--red);
+      animation: pulse-ptt 1.2s infinite;
+    }
+
+    @keyframes pulse-ptt {
+      0%,100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.4); }
+      50%      { box-shadow: 0 0 20px 4px rgba(239,68,68,0.15); }
+    }
+
+    /* ── METER ── */
+    .meter-wrap {
+      margin-top: 10px;
+      background: var(--bg-deep);
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+    }
+
+    .meter-bar {
+      height: 4px;
+      background: rgba(201,100,66,0.1);
+      border: 1px solid var(--border);
+      margin-bottom: 8px;
+    }
+
+    .meter-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--glow), var(--glow-bright));
+      box-shadow: 0 0 8px var(--glow-dim);
+      transition: width 0.1s linear;
+    }
+
+    .meter-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .mini {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-family: monospace;
+      line-height: 1.5;
+    }
+
+    /* ── INFO BAR ── */
+    .info-bar {
+      padding: 8px 14px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-left: 2px solid var(--glow);
+      font-size: 11px;
+      color: var(--text-muted);
+      font-family: monospace;
+      line-height: 1.6;
+      flex-shrink: 0;
+    }
+
+    /* ── TERMINAL ── */
+    .terminal-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-deep);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .terminal-header {
+      height: 30px;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px;
+      flex-shrink: 0;
+    }
+
+    .term-label {
+      font-family: monospace;
+      font-size: 9px;
+      letter-spacing: 2px;
+      color: var(--glow);
+      text-transform: uppercase;
+    }
+
+    .term-dots { display: flex; gap: 5px; }
+    .term-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .term-dot:nth-child(1) { background: #ef4444; }
+    .term-dot:nth-child(2) { background: #f59e0b; }
+    .term-dot:nth-child(3) { background: #22c55e; }
+
+    pre#output {
+      flex: 1;
+      overflow: auto;
+      color: var(--text-dim);
+      padding: 16px;
+      white-space: pre-wrap;
+      word-break: break-word;
+      line-height: 1.7;
+      font-family: monospace;
+      font-size: 13px;
+      margin: 0;
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); }
+    ::-webkit-scrollbar-thumb:hover { background: var(--glow-dim); }
+
+    /* ── STATUS TEXT ── */
+    #statusText {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-family: monospace;
+      margin-top: 8px;
+      text-align: center;
+      min-height: 14px;
+    }
+
+    @media (max-width: 900px) {
+      .hud-layout { flex-direction: column; overflow: auto; }
+      .hud-left { width: 100%; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="scanlines"></div>
+  <div class="app">
+
+    <!-- HEADER -->
+    <div class="hud-header">
+      <div class="header-left">
+        <div class="system-id">
+          <span class="sys-tag">SYS</span>
+          <h1>Agent Control</h1>
+        </div>
+        <div class="header-subtitle">智能语音终端 · PPT PILOT</div>
+      </div>
+      <div class="status-group">
+        <div class="hud-pill"><span class="hud-dot off" id="connDot"></span><span id="connPill">未连接</span></div>
+        <div class="hud-pill"><span class="hud-dot off" id="listenDot"></span><span id="listenState">自动监听未开启</span></div>
+        <div class="hud-pill"><span class="hud-dot off" id="micDot"></span><span id="micState">ASR 待机</span></div>
+      </div>
+    </div>
+
+    <!-- MAIN LAYOUT -->
+    <div class="hud-layout">
+
+      <!-- LEFT COLUMN -->
+      <div class="hud-left">
+
+        <!-- Device + Auto-listen -->
+        <div class="hud-panel">
+          <div class="panel-label">输入设备</div>
+          <div class="field">
+            <label for="inputDevice">语音输入设备</label>
+            <select id="inputDevice"></select>
+          </div>
+          <div class="switch-row">
+            <div class="switch-hint">
+              <strong>连续自动监听</strong>
+              <span>打开后持续采集语音并追加到输入框</span>
+            </div>
+            <label class="switch" aria-label="自动监听开关">
+              <input type="checkbox" id="autoListenToggle" />
+            </label>
+          </div>
+        </div>
+
+        <!-- Quick actions -->
+        <div class="hud-panel">
+          <div class="panel-label">快捷干预指令</div>
+          <div class="button-grid">
+            <button class="btn start" id="startDefenseBtn">▶ 开始汇报</button>
+            <button class="btn resume" id="resumeDefenseBtn">⏯ 继续汇报</button>
+            <button class="btn stop" id="stopBtn">⏹ 停止输出</button>
+            <button class="btn finish" id="finishBtn">◈ 进入答辩模式</button>
+          </div>
+        </div>
+
+        <!-- PTT -->
+        <div class="hud-panel ptt-panel">
+          <div class="panel-label">按住说话</div>
+          <button class="btn start ptt-round" id="pushTalkBtn">按住说话，松开发送</button>
+          <div class="meter-wrap">
+            <div class="meter-bar"><div class="meter-fill" id="meterFill"></div></div>
+            <div class="meter-row">
+              <div class="mini" id="meterText">待机</div>
+              <div class="mini" id="asrPreviewText" style="text-align:right;max-width:70%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">最近识别：暂无</div>
+            </div>
+            <div class="mini" id="asrStatusText" style="margin-top:5px;">建议将输入设备切至会议回采设备或 Stereo Mix。</div>
+          </div>
+        </div>
+
+        <input id="threadId" type="hidden" value="web_user_001" />
+
+        <!-- Text input -->
+        <div class="hud-panel">
+          <div class="panel-label">文本指令输入</div>
+          <div class="field">
+            <label for="input">指令 / 问题</label>
+            <textarea id="input" placeholder="手动输入指令或问题，例如：解释一下这一页..."></textarea>
+          </div>
+          <div class="button-grid">
+            <button class="btn btn-light" id="clearBtn">清空面板</button>
+            <button class="btn btn-primary wide" id="sendBtn">发送指令 (Ctrl+Enter)</button>
+          </div>
+          <div id="statusText"></div>
+        </div>
+
+      </div><!-- /hud-left -->
+
+      <!-- RIGHT COLUMN -->
+      <div class="hud-right">
+        <div class="info-bar">
+          推荐用法：自动监听模式适合连续收集语音。使用"按住说话"会先停止当前 TTS 并开始监听，松开后自动发送对话内容给 Agent。
+        </div>
+        <div class="terminal-wrap">
+          <div class="terminal-header">
+            <span class="term-label">AGENT OUTPUT STREAM</span>
+            <div class="term-dots">
+              <div class="term-dot"></div>
+              <div class="term-dot"></div>
+              <div class="term-dot"></div>
+            </div>
+          </div>
+          <pre id="output"></pre>
+        </div>
+      </div><!-- /hud-right -->
+
+    </div><!-- /hud-layout -->
+  </div><!-- /app -->
+
+  <script>
+    const outputEl = document.getElementById('output');
+    const inputEl = document.getElementById('input');
+    const threadIdEl = document.getElementById('threadId');
+    const sendBtn = document.getElementById('sendBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const autoListenToggle = document.getElementById('autoListenToggle');
+    const pushTalkBtn = document.getElementById('pushTalkBtn');
+    const startDefenseBtn = document.getElementById('startDefenseBtn');
+    const resumeDefenseBtn = document.getElementById('resumeDefenseBtn');
+    const finishBtn = document.getElementById('finishBtn');
+    const inputDeviceEl = document.getElementById('inputDevice');
+    const connPill = document.getElementById('connPill');
+    const connDot = document.getElementById('connDot');
+    const listenState = document.getElementById('listenState');
+    const listenDot = document.getElementById('listenDot');
+    const micState = document.getElementById('micState');
+    const micDot = document.getElementById('micDot');
+    const meterFill = document.getElementById('meterFill');
+    const meterText = document.getElementById('meterText');
+    const asrPreviewText = document.getElementById('asrPreviewText');
+    const statusText = document.getElementById('statusText');
+    const asrStatusText = document.getElementById('asrStatusText');
+
+    const API_BASE = window.location.origin;
+    let abortController = null;
+    let eventSource = null;
+    let autoListeningEnabled = false;
+    let pushToTalkActive = false;
+    let pushToTalkPendingSend = false;
+    let pushToTalkBuffer = '';
+    let spacePressActive = false;
+    let presentationLocked = false;
+
+    function appendOut(text) {
+      outputEl.textContent += text;
+      outputEl.scrollTop = outputEl.scrollHeight;
+    }
+
+    function appendRecognizedText(text) {
+      const incoming = String(text || '').trim();
+      if (!incoming) return;
+      const existing = inputEl.value.trim();
+      inputEl.value = existing ? `${existing}\n${incoming}` : incoming;
+    }
+
+    function appendPushToTalkText(text) {
+      const incoming = String(text || '').trim();
+      if (!incoming) return;
+      pushToTalkBuffer = pushToTalkBuffer ? `${pushToTalkBuffer}\n${incoming}` : incoming;
+      inputEl.value = pushToTalkBuffer;
+    }
+
+    function setStatus(text) {
+      statusText.textContent = text || '';
+    }
+
+    function setConnState(text, state = 'off') {
+      connPill.textContent = text;
+      connDot.className = 'hud-dot';
+      connDot.classList.add(state === 'ok' ? 'ok' : state === 'live' ? 'live' : 'off');
+    }
+
+    function setListenState(enabled, active = false) {
+      listenState.textContent = !enabled ? '自动监听未开启' : active ? '自动监听中' : '自动监听已开启';
+      listenDot.className = 'hud-dot';
+      listenDot.classList.add(!enabled ? 'off' : active ? 'live' : 'ok');
+    }
+
+    function setMicState(text, state = 'off') {
+      micState.textContent = text;
+      micDot.className = 'hud-dot';
+      micDot.classList.add(state === 'ok' ? 'ok' : state === 'live' ? 'live' : 'off');
+    }
+
+    function setMeter(level) {
+      const pct = Math.max(0, Math.min(1, level || 0));
+      meterFill.style.width = `${Math.round(pct * 100)}%`;
+      meterText.textContent = pct > 0.02 ? `输入活跃 ${Math.round(pct * 100)}%` : '待机';
+    }
+
+    function resetPushToTalkButton() {
+      pushTalkBtn.innerHTML = '按住说话，松开发送';
+      pushTalkBtn.className = 'btn start ptt-round';
+    }
+
+    function setPresentationLocked(locked) {
+      presentationLocked = !!locked;
+      startDefenseBtn.disabled = presentationLocked;
+      resumeDefenseBtn.disabled = presentationLocked;
+    }
+
+    async function stopAgent() {
+      try {
+        if (abortController) abortController.abort();
+        abortController = null;
+      } catch { }
+      try {
+        await fetch(`${API_BASE}/stop`, { method: 'POST' });
+      } catch { }
+      setStatus('已停止当前 Agent 流。');
+      setConnState('已停止', 'off');
+    }
+
+    async function sendChat(customText = null, options = {}) {
+      const { clearInput = true } = options;
+      const text = (customText ?? inputEl.value).trim();
+      if (!text) return;
+
+      await stopAgent();
+      inputEl.value = clearInput ? '' : text;
+      setConnState('请求中', 'live');
+      abortController = new AbortController();
+
+      try {
+        const resp = await fetch(`${API_BASE}/chat`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text, thread_id: threadIdEl.value || 'web_user_001' }),
+          signal: abortController.signal
+        });
+
+        if (!resp.ok || !resp.body) {
+          appendOut(`\n[HTTP ${resp.status}] ${await resp.text()}\n`);
+          setConnState('错误', 'off');
+          return;
+        }
+
+        appendOut(`\n\nUser: ${text}\nAgent: `);
+        setConnState('流式返回中', 'live');
+
+        const reader = resp.body.getReader();
+        const decoder = new TextDecoder('utf-8');
+        let buf = '';
+
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
+          buf += decoder.decode(value, { stream: true });
+
+          let idx;
+          while ((idx = buf.indexOf('\n\n')) !== -1) {
+            const chunk = buf.slice(0, idx);
+            buf = buf.slice(idx + 2);
+            const line = chunk.split('\n').find((l) => l.startsWith('data: '));
+            if (!line) continue;
+            const data = line.slice(6);
+            if (data === '[DONE]') {
+              appendOut('\n');
+              setConnState('完成', 'ok');
+              break;
+            }
+            try {
+              const obj = JSON.parse(data);
+              if (obj && obj.type === 'final') continue;
+              if (obj && typeof obj.text === 'string') appendOut(obj.text);
+              if (obj && typeof obj.error === 'string') appendOut(`\n[error] ${obj.error}\n`);
+            } catch {
+              appendOut(data);
+            }
+          }
+        }
+      } catch (e) {
+        if (e && e.name === 'AbortError') {
+          setStatus('当前请求已中断。');
+        } else {
+          appendOut(`\n[error] ${String(e)}\n`);
+          setStatus(`请求失败：${String(e)}`);
+        }
+        setConnState('已停止', 'off');
+      } finally {
+        abortController = null;
+      }
+    }
+
+    function ensureAsrEvents() {
+      if (eventSource) return;
+      eventSource = new EventSource(`${API_BASE}/asr/events`);
+      eventSource.onmessage = (event) => {
+        try {
+          const payload = JSON.parse(event.data);
+          handleAsrEvent(payload);
+        } catch (err) {
+          console.error('ASR event parse failed', err);
+        }
+      };
+      eventSource.onerror = () => {
+        setMicState('ASR 事件流已断开', 'off');
+      };
+    }
+
+    async function startAsr(options = {}) {
+      const { updateToggleOnFailure = false } = options;
+      ensureAsrEvents();
+      try {
+        const rawValue = inputDeviceEl.value;
+        const body = rawValue === '' ? {} : { device_index: Number(rawValue) };
+        const resp = await fetch(`${API_BASE}/asr/start`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        const data = await resp.json();
+        if (!resp.ok) {
+          throw new Error(data.detail || JSON.stringify(data));
+        }
+        autoListeningEnabled = true;
+        setListenState(true, true);
+        setMicState('ASR 监听中', 'live');
+        if (data.device_name) {
+          asrStatusText.textContent = `当前监听设备：${data.device_name}`;
+        }
+      } catch (err) {
+        setStatus(`开启 ASR 监听失败：${String(err)}`);
+        setMicState('ASR 启动失败', 'off');
+        if (updateToggleOnFailure && autoListenToggle) autoListenToggle.checked = false;
+      }
+    }
+
+    async function stopAsr() {
+      try {
+        await fetch(`${API_BASE}/asr/stop`, { method: 'POST' });
+      } catch { }
+      autoListeningEnabled = false;
+      setListenState(false, false);
+      setMicState('ASR 待机', 'ok');
+      setMeter(0);
+    }
+
+    async function startPushToTalk() {
+      if (pushToTalkActive) return;
+      pushToTalkActive = true;
+      pushToTalkPendingSend = false;
+      pushToTalkBuffer = '';
+      pushTalkBtn.innerHTML = '🔴 正在监听...松开发送';
+      pushTalkBtn.className = 'btn stop ptt-round';
+      inputEl.value = '';
+      setStatus('按住说话中，松开后会自动发送。');
+      await new Promise((r) => requestAnimationFrame(() => r()));
+      await stopAgent();
+      await startAsr();
+    }
+
+    async function flushPushToTalk() {
+      const text = pushToTalkBuffer.trim();
+      pushToTalkPendingSend = false;
+      resetPushToTalkButton();
+      if (!text) {
+        setStatus('未识别到可发送的语音内容。');
+        return;
+      }
+      inputEl.value = text;
+      pushToTalkBuffer = '';
+      setStatus('已自动发送按住说话内容。');
+      await sendChat(text);
+    }
+
+    async function releasePushToTalk() {
+      if (!pushToTalkActive) return;
+      pushToTalkActive = false;
+      pushToTalkPendingSend = true;
+      setStatus('正在结束监听并准备发送。');
+      pushTalkBtn.innerHTML = '⏳ 正在处理...准备发送';
+      await new Promise((r) => requestAnimationFrame(() => r()));
+      stopAsr();
+    }
+
+    function handleAsrEvent(payload) {
+      if (!payload || typeof payload !== 'object') return;
+
+      if (payload.type === 'asr_snapshot') {
+        autoListeningEnabled = !!payload.running;
+        setListenState(autoListeningEnabled, autoListeningEnabled);
+        setMicState(payload.running ? 'ASR 监听中' : 'ASR 待机', payload.running ? 'live' : 'ok');
+        setMeter(payload.meter_level || 0);
+        if (payload.last_text) {
+          asrPreviewText.textContent = `最近识别：${payload.last_text}`;
+        }
+        return;
+      }
+
+      if (payload.type === 'asr_status') {
+        const running = payload.status === 'running';
+        autoListeningEnabled = running;
+        setListenState(running, running);
+        setMicState(running ? 'ASR 监听中' : 'ASR 待机', running ? 'live' : 'ok');
+        if (payload.device_name) {
+          asrStatusText.textContent = `当前监听设备：${payload.device_name}`;
+        }
+        if (!running) {
+          setMeter(0);
+        }
+        if (!running && pushToTalkPendingSend) {
+          flushPushToTalk();
+        }
+        return;
+      }
+
+      if (payload.type === 'asr_meter') {
+        setMeter(payload.level || 0);
+        return;
+      }
+
+      if (payload.type === 'asr_final') {
+        const text = String(payload.text || '').trim();
+        if (!text) return;
+        asrPreviewText.textContent = `最近识别：${text}`;
+        if (pushToTalkActive || pushToTalkPendingSend) {
+          appendPushToTalkText(text);
+          setStatus(pushToTalkActive ? '按住说话识别中。' : '按住说话识别完成，准备发送。');
+        } else {
+          appendRecognizedText(text);
+          setStatus('已将识别结果追加到输入框，请手动点击发送。');
+        }
+        return;
+      }
+
+      if (payload.type === 'asr_error') {
+        setMicState('ASR 错误', 'off');
+        setStatus(payload.message || 'ASR 服务异常');
+      }
+    }
+
+    async function loadDevices() {
+      try {
+        const resp = await fetch(`${API_BASE}/asr/devices`);
+        const data = await resp.json();
+        const devices = Array.isArray(data.devices) ? data.devices : [];
+        inputDeviceEl.innerHTML = '';
+
+        if (!devices.length) {
+          const opt = document.createElement('option');
+          opt.value = '';
+          opt.textContent = '未发现输入设备';
+          inputDeviceEl.appendChild(opt);
+          return;
+        }
+
+        for (const device of devices) {
+          const opt = document.createElement('option');
+          opt.value = String(device.index);
+          const host = device.hostapi ? ` / ${device.hostapi}` : '';
+          opt.textContent = `${device.name}${host}`;
+          if (device.selected) opt.selected = true;
+          inputDeviceEl.appendChild(opt);
+        }
+      } catch (err) {
+        setStatus(`读取 ASR 设备失败：${String(err)}`);
+      }
+    }
+
+    function bindQuickButton(button, text) {
+      button.addEventListener('click', () => {
+        inputEl.value = text;
+        sendChat(text);
+      });
+    }
+
+    async function callPresentationAction(path, successText) {
+      await stopAgent();
+      setStatus('');
+      setConnState('请求中', 'live');
+      try {
+        const resp = await fetch(`${API_BASE}${path}`, { method: 'POST' });
+        const data = await resp.json();
+        if (!resp.ok || data.status !== 'success') {
+          throw new Error(data.detail || data.message || JSON.stringify(data));
+        }
+        appendOut(`\n\n[Action] ${successText}\n`);
+        if (data.message) {
+          appendOut(`${data.message}\n`);
+        }
+        if (path === '/presentation/enter-defense-qa') {
+          setPresentationLocked(true);
+        }
+        setConnState('完成', 'ok');
+      } catch (err) {
+        appendOut(`\n[error] ${String(err)}\n`);
+        setStatus(`动作执行失败：${String(err)}`);
+        setConnState('错误', 'off');
+      }
+    }
+
+    sendBtn.addEventListener('click', () => sendChat());
+    clearBtn.addEventListener('click', () => { outputEl.textContent = ''; });
+    stopBtn.addEventListener('click', stopAgent);
+    if (autoListenToggle) {
+      autoListenToggle.addEventListener('change', async () => {
+        if (autoListenToggle.checked) {
+          await startAsr({ updateToggleOnFailure: true });
+        } else {
+          await stopAsr();
+        }
+      });
+    }
+    pushTalkBtn.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      try { pushTalkBtn.setPointerCapture(e.pointerId); } catch { }
+      startPushToTalk();
+    });
+    pushTalkBtn.addEventListener('pointerup', (e) => {
+      e.preventDefault();
+      releasePushToTalk();
+    });
+    pushTalkBtn.addEventListener('pointercancel', (e) => {
+      e.preventDefault();
+      releasePushToTalk();
+    });
+    pushTalkBtn.addEventListener('pointerleave', () => {
+      releasePushToTalk();
+    });
+    startDefenseBtn.addEventListener('click', () => callPresentationAction('/presentation/start', '开始汇报'));
+    resumeDefenseBtn.addEventListener('click', () => callPresentationAction('/presentation/resume', '继续汇报'));
+    finishBtn.addEventListener('click', () => callPresentationAction('/presentation/enter-defense-qa', '进入答辩模式'));
+
+    inputDeviceEl.addEventListener('change', async () => {
+      if (!autoListeningEnabled) return;
+      await startAsr();
+    });
+    inputDeviceEl.addEventListener('focus', () => {
+      loadDevices();
+    });
+
+    inputEl.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) sendChat();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.code !== 'Space') return;
+      if (document.activeElement === inputEl) return; // 输入框聚焦时不触发全局空格
+      e.preventDefault();
+      if (e.repeat || spacePressActive) return;
+      spacePressActive = true;
+      startPushToTalk();
+    });
+    document.addEventListener('keyup', (e) => {
+      if (e.code !== 'Space') return;
+      if (document.activeElement === inputEl) return;
+      e.preventDefault();
+      if (!spacePressActive) return;
+      spacePressActive = false;
+      releasePushToTalk();
+    });
+
+    setConnState('未连接', 'off');
+    setListenState(false, false);
+    setMicState('ASR 待机', 'ok');
+    resetPushToTalkButton();
+    ensureAsrEvents();
+    loadDevices();
+
+    (async () => {
+      try {
+        const resp = await fetch(`${API_BASE}/runtime/env/status`);
+        const data = await resp.json();
+        const needOpenAI = !data.has_openai_key;
+        const needMiniMax = !data.has_minimax_key;
+        if (!(needOpenAI || needMiniMax)) return;
+
+        // 生成弹窗逻辑保留
+        const overlay = document.createElement('div');
+        overlay.style.position = 'fixed';
+        overlay.style.inset = '0';
+        overlay.style.background = 'rgba(15, 23, 34, 0.55)';
+        overlay.style.backdropFilter = 'blur(4px)';
+        overlay.style.display = 'flex';
+        overlay.style.alignItems = 'center';
+        overlay.style.justifyContent = 'center';
+        overlay.style.zIndex = '9999';
+
+        const panel = document.createElement('div');
+        panel.style.width = 'min(860px, calc(100vw - 32px))';
+        panel.style.background = '#ffffff';
+        panel.style.border = '1px solid #e2e8f0';
+        panel.style.borderRadius = '16px';
+        panel.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)';
+        panel.style.padding = '24px';
+
+        const title = document.createElement('h2');
+        title.textContent = '首次运行需要填写配置';
+        title.style.marginTop = '0';
+        const desc = document.createElement('p');
+        desc.textContent = '如果 .env 里已有值，这里会自动预填。保存后请重启主服务和 TTS 服务。';
+        desc.style.color = '#64748b';
+
+        const form = document.createElement('div');
+        form.style.display = 'grid';
+        form.style.gridTemplateColumns = '1fr 1fr';
+        form.style.gap = '16px';
+
+        const fieldMap = {};
+        function mk(label, id, placeholder, value = '') {
+          const wrap = document.createElement('div');
+          const lab = document.createElement('label');
+          lab.textContent = label;
+          lab.style.display = 'block';
+          lab.style.marginBottom = '6px';
+          lab.style.fontSize = '13px';
+          lab.style.fontWeight = '600';
+          lab.style.color = '#334155';
+
+          const inp = document.createElement('input');
+          inp.type = 'text';
+          inp.id = id;
+          inp.placeholder = placeholder || '';
+          inp.value = value || '';
+          inp.style.width = '100%';
+          inp.style.height = '42px';
+          inp.style.padding = '0 12px';
+          inp.style.border = '1px solid #cbd5e1';
+          inp.style.borderRadius = '8px';
+          inp.style.background = '#f8fafc';
+
+          wrap.appendChild(lab);
+          wrap.appendChild(inp);
+          fieldMap[id] = inp;
+          return wrap;
+        }
+
+        const fields = [
+          mk('OPENAI_API_KEY', 'OPENAI_API_KEY', '必填'),
+          mk('OPENAI_BASE_URL', 'OPENAI_BASE_URL', '例如：https://api.openai.com/v1'),
+          mk('OPENAI_MODEL', 'OPENAI_MODEL', '例如：gpt-4o'),
+          mk('OPENAI_TEMPERATURE', 'OPENAI_TEMPERATURE', '例如：0.7'),
+          mk('MINIMAX_API_KEY', 'MINIMAX_API_KEY', '必填'),
+          mk('MINIMAX_WS_URL', 'MINIMAX_WS_URL', '默认：wss://api.minimax.io/ws/v1/t2a_v2'),
+          mk('MINIMAX_MODEL', 'MINIMAX_MODEL', '默认：speech-2.8-turbo'),
+          mk('MINIMAX_VOICE_ID', 'MINIMAX_VOICE_ID', '默认：moss_audio_...'),
+          mk('MINIMAX_START_BUFFER_MS', 'MINIMAX_START_BUFFER_MS', '默认：120'),
+        ];
+        for (const f of fields) form.appendChild(f);
+
+        panel.appendChild(title);
+        panel.appendChild(desc);
+        panel.appendChild(form);
+        overlay.appendChild(panel);
+        document.body.appendChild(overlay);
+
+        try {
+          const vResp = await fetch(`${API_BASE}/runtime/env/values`);
+          const vData = await vResp.json();
+          const values = vData.values || {};
+          for (const k of Object.keys(values)) {
+            const item = values[k];
+            const el = fieldMap[k];
+            if (!el) continue;
+            const val = item && typeof item.value === 'string' ? item.value : '';
+            if (!val) continue;
+            el.value = val;
+            el.placeholder = '';
+            if (/_API_KEY$/.test(k)) {
+              el.dataset.masked = val;
+            }
+          }
+        } catch (err) {
+          console.warn('读取 .env 预填失败', err);
+        }
+
+        try {
+          const cResp = await fetch(`${API_BASE}/runtime/config`);
+          const cData = await cResp.json();
+          const map = {
+            OPENAI_BASE_URL: cData.openai_base_url,
+            OPENAI_MODEL: cData.openai_model,
+            MINIMAX_MODEL: cData.minimax_model,
+            MINIMAX_VOICE_ID: cData.minimax_voice_id,
+          };
+          for (const k of Object.keys(map)) {
+            const el = fieldMap[k];
+            if (!el) continue;
+            if (!el.value && typeof map[k] === 'string' && map[k]) {
+              el.value = map[k];
+              el.placeholder = '';
+            }
+          }
+        } catch (err) {
+          console.warn('读取运行配置预填失败', err);
+        }
+      } catch (e) {
+        console.error('配置弹窗逻辑异常', e);
+      }
+    })();
+  </script>
+</body>
+</html>

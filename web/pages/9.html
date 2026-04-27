@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>与现有工作的对比</title>
+  <link rel="stylesheet" href="./shared.css" />
+  <style>
+    .img-hero {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.03);
+      border-radius: 24px;
+    }
+    .img-hero img { width: 100%; height: 100%; object-fit: contain; }
+    .img-label { position: absolute; top: 28px; left: 40px; z-index: 2; }
+    .img-title-overlay { position: absolute; bottom: 32px; left: 40px; z-index: 2; }
+    .img-title-overlay h1 {
+      margin: 0 0 0.25rem;
+      font-family: var(--font-serif);
+      font-size: clamp(22px, 2.5vw, 32px);
+      font-weight: 500;
+      color: var(--ivory);
+      text-shadow: 0 2px 12px rgba(0,0,0,0.6);
+    }
+    .img-title-overlay .lead {
+      margin: 0;
+      font-size: clamp(13px, 1.4vw, 17px);
+      color: rgba(255,255,255,0.85);
+      text-shadow: 0 1px 6px rgba(0,0,0,0.5);
+    }
+    .table-overlay {
+      position: absolute;
+      top: 28px;
+      right: 32px;
+      z-index: 2;
+      background: rgba(0,0,0,0.60);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px;
+      padding: 10px 14px;
+      backdrop-filter: blur(6px);
+      font-size: clamp(10px, 1vw, 12px);
+    }
+    .table-overlay table { border-collapse: collapse; }
+    .table-overlay th {
+      color: rgba(255,255,255,0.55);
+      font-weight: 500;
+      padding: 2px 8px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+    }
+    .table-overlay th:first-child { text-align: left; }
+    .table-overlay td {
+      padding: 3px 8px;
+      text-align: center;
+      color: rgba(255,255,255,0.75);
+    }
+    .table-overlay td:first-child { text-align: left; }
+    .table-overlay td.ours { color: #c96442; font-weight: 600; }
+    .check { color: #4ade80; }
+    .partial { color: #fbbf24; }
+  </style>
+</head>
+<body class="theme-linear">
+  <div class="card" style="position: relative; padding: 0;">
+    <div class="img-label"><div class="tag">对比分析</div></div>
+
+    <div class="table-overlay">
+      <table>
+        <thead>
+          <tr>
+            <th>功能</th>
+            <th>CellVoyager</th>
+            <th>Biomni</th>
+            <th>CellAgent</th>
+            <th style="color:#c96442;">我们</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>自然语言交互</td><td><span class="check">✅</span></td><td><span class="check">✅</span></td><td><span class="check">✅</span></td><td class="ours"><span class="check">✅</span></td></tr>
+          <tr><td>多工具编排</td><td><span class="partial">⚠️</span></td><td><span class="check">✅</span></td><td><span class="check">✅</span></td><td class="ours"><span class="check">✅</span></td></tr>
+          <tr><td>多轮对话记忆</td><td><span class="partial">⚠️</span></td><td><span class="partial">⚠️</span></td><td><span class="partial">⚠️</span></td><td class="ours"><span class="check">✅</span></td></tr>
+          <tr><td>生物学先验整合</td><td><span class="partial">⚠️</span></td><td><span class="partial">⚠️</span></td><td><span class="partial">⚠️</span></td><td class="ours"><span class="check">✅</span></td></tr>
+          <tr><td>安全可复现执行</td><td><span class="partial">⚠️</span></td><td><span class="partial">⚠️</span></td><td><span class="partial">⚠️</span></td><td class="ours"><span class="check">✅</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="img-hero">
+      <img src="../../content/assets/figs_09/agent_comparison.png" alt="各方法能力雷达图对比" />
+    </div>
+
+    <div class="img-title-overlay">
+      <h1>与现有工作的对比</h1>
+      <p class="lead">单细胞分析智能体横向比较 · 能力雷达图</p>
+    </div>
+  </div>
+
+  <textarea id="speaker-notes" style="display:none">这一页将我们的方法与现有的单细胞分析智能体进行横向比较。我们对比了CellVoyager、Biomni和CellAgent三个代表性工作。在自然语言交互、代码生成执行和结果自动解释方面，所有方法都支持良好。但在多轮对话记忆、生物学先验整合和安全可复现执行方面，我们的方法具有明显优势。雷达图直观展示了各方法的能力分布，我们的方法在多个维度上均达到最优水平。核心差异化优势包括：端到端分析闭环、工具感知规划、数据状态级记忆、图引导生物学先验，以及安全可复现执行。</textarea>
+</body>
+</html>

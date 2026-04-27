@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>单细胞组学分析智能体</title>
+  <link rel="stylesheet" href="./shared.css" />
+  <style>
+    .layer-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .layer-item {
+      border-radius: 10px;
+      padding: 10px 12px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.10);
+    }
+    .layer-item h4 {
+      margin: 0 0 4px;
+      font-family: var(--font-serif);
+      font-size: clamp(11px, 1.1vw, 14px);
+      font-weight: 500;
+      color: var(--ivory);
+    }
+    .layer-item p {
+      margin: 0;
+      font-size: clamp(10px, 0.95vw, 12px);
+      line-height: 1.45;
+      color: rgba(255,255,255,0.65);
+    }
+    .flow-diagram {
+      margin: 10px 0 8px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      font-family: var(--font-mono);
+      font-size: clamp(10px, 1vw, 13px);
+      color: rgba(255,255,255,0.75);
+      line-height: 1.8;
+      text-align: center;
+    }
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .tag-chip {
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      font-size: clamp(10px, 0.9vw, 12px);
+      color: rgba(255,255,255,0.75);
+    }
+  </style>
+</head>
+<body class="theme-linear">
+  <div class="card" style="padding: 36px 48px 32px;">
+    <div class="tag">智能体</div>
+    <h1 style="margin: 8px 0 4px; font-size: clamp(26px, 3vw, 38px);">单细胞组学分析智能体</h1>
+    <p class="lead" style="font-size: clamp(14px, 1.5vw, 18px); margin: 0 0 8px;">核心技术路线</p>
+
+    <div class="layer-grid">
+      <div class="layer-item">
+        <h4>规划层</h4>
+        <p>LLM（GPT-4 / Claude）解析用户意图，生成分析计划</p>
+      </div>
+      <div class="layer-item">
+        <h4>工具层</h4>
+        <p>封装 Scanpy / Seurat / SCENIC 等主流工具为 API</p>
+      </div>
+      <div class="layer-item">
+        <h4>执行层</h4>
+        <p>代码生成 + 沙箱执行 + 结果解释</p>
+      </div>
+      <div class="layer-item">
+        <h4>记忆层</h4>
+        <p>分析历史上下文，支持多轮对话</p>
+      </div>
+    </div>
+
+    <div class="flow-diagram">
+用户输入 → 意图理解 → 工具选择 → 代码生成 → 沙箱执行 → 可视化 → 结果解释
+    </div>
+
+    <div class="tag-row">
+      <span class="tag-chip">质控</span>
+      <span class="tag-chip">降维</span>
+      <span class="tag-chip">聚类</span>
+      <span class="tag-chip">轨迹推断</span>
+      <span class="tag-chip">差异表达</span>
+      <span class="tag-chip">基因调控网络</span>
+      <span class="tag-chip">细胞通讯</span>
+      <span class="tag-chip">空间转录组</span>
+    </div>
+  </div>
+
+  <textarea id="speaker-notes" style="display:none">第二部分介绍单细胞组学分析智能体。这是一个基于大语言模型的系统，能够将自然语言指令转化为可执行的生物信息学分析流程。技术架构分为四层：规划层使用GPT-4或Claude解析用户意图并生成分析计划；工具层封装了Scanpy、Seurat、SCENIC等主流单细胞分析工具作为API；执行层负责代码生成、沙箱执行和结果解释；记忆层维护分析历史上下文，支持多轮对话。智能体支持质控、降维、聚类、轨迹推断、差异表达、基因调控网络、细胞通讯和空间转录组等多种分析类型。</textarea>
+</body>
+</html>

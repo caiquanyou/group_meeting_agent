@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>智能体测试结果 - Classic</title>
+  <link rel="stylesheet" href="./shared.css" />
+  <style>
+    .img-hero {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.03);
+      border-radius: 24px;
+    }
+    .img-hero img { width: 100%; height: 100%; object-fit: contain; }
+    .img-label { position: absolute; top: 28px; left: 40px; z-index: 2; }
+    .img-title-overlay { position: absolute; bottom: 32px; left: 40px; z-index: 2; }
+    .img-title-overlay h1 {
+      margin: 0 0 0.25rem;
+      font-family: var(--font-serif);
+      font-size: clamp(22px, 2.5vw, 32px);
+      font-weight: 500;
+      color: var(--ivory);
+      text-shadow: 0 2px 12px rgba(0,0,0,0.6);
+    }
+    .img-title-overlay .lead {
+      margin: 0;
+      font-size: clamp(13px, 1.4vw, 17px);
+      color: rgba(255,255,255,0.85);
+      text-shadow: 0 1px 6px rgba(0,0,0,0.5);
+    }
+  </style>
+</head>
+<body class="theme-linear">
+  <div class="card" style="position: relative; padding: 0;">
+    <div class="img-label"><div class="tag">测试结果</div></div>
+    <div class="img-hero">
+      <img src="../../content/assets/figs_10/agent_test_results.png" alt="智能体classic模式测试结果" />
+    </div>
+    <div class="img-title-overlay">
+      <h1>智能体测试结果</h1>
+      <p class="lead">Classic 模式表现</p>
+    </div>
+  </div>
+  <textarea id="speaker-notes" style="display:none">这里展示智能体在classic模式下的测试结果。从图中可以看到，智能体能够准确理解用户的自然语言指令，并生成相应的分析代码。测试涵盖了质控、降维、聚类等常见分析任务，智能体表现出了良好的任务完成能力。</textarea>
+</body>
+</html>

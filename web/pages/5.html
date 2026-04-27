@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SCARF 的问题</title>
+  <link rel="stylesheet" href="./shared.css" />
+  <style>
+    .img-hero {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.03);
+      border-radius: 24px;
+    }
+    .img-hero img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .img-label { position: absolute; top: 28px; left: 40px; z-index: 2; }
+    .img-title-overlay {
+      position: absolute;
+      bottom: 32px;
+      left: 40px;
+      z-index: 2;
+    }
+    .img-title-overlay h1 {
+      margin: 0 0 0.25rem;
+      font-family: var(--font-serif);
+      font-size: clamp(22px, 2.5vw, 32px);
+      font-weight: 500;
+      color: var(--ivory);
+      text-shadow: 0 2px 12px rgba(0,0,0,0.6);
+    }
+    .img-title-overlay .lead {
+      margin: 0;
+      font-size: clamp(13px, 1.4vw, 17px);
+      color: rgba(255,255,255,0.85);
+      text-shadow: 0 1px 6px rgba(0,0,0,0.5);
+    }
+  </style>
+</head>
+<body class="theme-linear">
+  <div class="card" style="position: relative; padding: 0;">
+    <div class="img-label"><div class="tag">问题分析</div></div>
+
+    <div class="img-hero">
+      <img src="../../content/assets/figs_05/scarf_results.png" alt="SCARF结果" />
+    </div>
+
+    <div class="img-title-overlay">
+      <h1>SCARF 的问题</h1>
+      <p class="lead">模态不可见 · 计算瓶颈 · 缺乏生成能力</p>
+    </div>
+  </div>
+
+  <textarea id="speaker-notes" style="display:none">
+  虽然SCARF取得了一定成果，但也暴露出一些问题。首先是模态间不可见的问题，ATAC数据和RNA数据是分开训练的，没有充分利用模态间的互补信息。其次是计算瓶颈，全基因组ATAC峰矩阵的维度过高，达到约五十万维，给计算带来了很大压力。第三是缺乏生成能力，无法进行跨模态预测与补全。这些问题促使我们思考如何构建一个更完善的单细胞多组学基础模型。
+  </textarea>
+</body>
+</html>

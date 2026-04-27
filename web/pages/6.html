@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SCOPE-X 研究方向定位</title>
+  <link rel="stylesheet" href="./shared.css" />
+  <style>
+    .img-hero {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.03);
+      border-radius: 24px;
+    }
+    .img-hero img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .img-label { position: absolute; top: 28px; left: 40px; z-index: 2; }
+    .img-title-overlay {
+      position: absolute;
+      bottom: 32px;
+      left: 40px;
+      z-index: 2;
+    }
+    .img-title-overlay h1 {
+      margin: 0 0 0.25rem;
+      font-family: var(--font-serif);
+      font-size: clamp(22px, 2.5vw, 32px);
+      font-weight: 500;
+      color: var(--ivory);
+      text-shadow: 0 2px 12px rgba(0,0,0,0.6);
+    }
+    .img-title-overlay .lead {
+      margin: 0;
+      font-size: clamp(13px, 1.4vw, 17px);
+      color: rgba(255,255,255,0.85);
+      text-shadow: 0 1px 6px rgba(0,0,0,0.5);
+    }
+  </style>
+</head>
+<body class="theme-linear">
+  <div class="card" style="position: relative; padding: 0;">
+    <div class="img-label"><div class="tag">研究方向</div></div>
+
+    <div class="img-hero">
+      <img src="../../content/assets/figs_06/scopex_positioning.png" alt="SCOPE-X定位" />
+    </div>
+
+    <div class="img-title-overlay">
+      <h1>SCOPE-X 研究方向定位</h1>
+      <p class="lead">统一编码器 · 跨模态生成 · 大规模预训练</p>
+    </div>
+  </div>
+
+  <textarea id="speaker-notes" style="display:none">
+  基于SCARF的经验，我们重新定义了核心问题：如何构建一个统一的单细胞多组学基础模型，同时具备表示学习、跨模态生成与零样本迁移能力？为此我们提出了SCOPE-X的三大目标。第一是统一编码器，支持RNA和ATAC任意组合输入，并实现基因组位置感知的tokenization。第二是跨模态生成，能够从RNA预测ATAC可及性，实现缺失模态补全。第三是大规模预训练，训练数据覆盖超过四百万细胞和五十多种组织类型，参数规模约一亿。这张图展示了SCOPE-X相比之前方法的优势。
+  </textarea>
+</body>
+</html>

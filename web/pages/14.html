@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>小鼠单细胞时序模型</title>
+  <link rel="stylesheet" href="./shared.css" />
+  <style>
+    .img-hero {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.03);
+      border-radius: 24px;
+    }
+    .img-hero img { width: 100%; height: 100%; object-fit: contain; }
+    .img-label { position: absolute; top: 28px; left: 40px; z-index: 2; }
+    .img-title-overlay { position: absolute; bottom: 32px; left: 40px; z-index: 2; }
+    .img-title-overlay h1 {
+      margin: 0 0 0.25rem;
+      font-family: var(--font-serif);
+      font-size: clamp(22px, 2.5vw, 32px);
+      font-weight: 500;
+      color: var(--ivory);
+      text-shadow: 0 2px 12px rgba(0,0,0,0.6);
+    }
+    .img-title-overlay .lead {
+      margin: 0;
+      font-size: clamp(13px, 1.4vw, 17px);
+      color: rgba(255,255,255,0.85);
+      text-shadow: 0 1px 6px rgba(0,0,0,0.5);
+    }
+  </style>
+</head>
+<body class="theme-linear">
+  <div class="card" style="position: relative; padding: 0;">
+    <div class="img-label"><div class="tag">时序模型</div></div>
+    <div class="img-hero">
+      <img src="../../content/assets/figs_13/temporal_background.png" alt="自动驾驶时序建模与细胞命运预测的类比" />
+    </div>
+    <div class="img-title-overlay">
+      <h1>小鼠单细胞时序模型</h1>
+      <p class="lead">跨领域灵感：自动驾驶 → 细胞命运预测</p>
+    </div>
+  </div>
+  <textarea id="speaker-notes" style="display:none">第四部分介绍小鼠单细胞时序模型。这个工作的灵感来源于自动驾驶领域。自动驾驶需要预测车辆未来轨迹，而细胞发育同样需要预测细胞未来状态。类比到单细胞时序分析，车辆位置序列对应细胞状态序列，传感器多模态对应多组学多模态，轨迹分叉点对应细胞命运决策点，速度加速度对应RNA velocity。我们的研究目标是构建小鼠发育全时程单细胞时序模型，预测细胞命运分支与关键调控节点。</textarea>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>空间自定位生成模型</title>
+  <link rel="stylesheet" href="./shared.css" />
+  <style>
+    .img-hero {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.03);
+      border-radius: 24px;
+    }
+    .img-hero img { width: 100%; height: 100%; object-fit: contain; }
+    .img-label { position: absolute; top: 28px; left: 40px; z-index: 2; }
+    .img-title-overlay { position: absolute; bottom: 32px; left: 40px; z-index: 2; }
+    .img-title-overlay h1 {
+      margin: 0 0 0.25rem;
+      font-family: var(--font-serif);
+      font-size: clamp(22px, 2.5vw, 32px);
+      font-weight: 500;
+      color: var(--ivory);
+      text-shadow: 0 2px 12px rgba(0,0,0,0.6);
+    }
+    .img-title-overlay .lead {
+      margin: 0;
+      font-size: clamp(13px, 1.4vw, 17px);
+      color: rgba(255,255,255,0.85);
+      text-shadow: 0 1px 6px rgba(0,0,0,0.5);
+    }
+  </style>
+</head>
+<body class="theme-linear">
+  <div class="card" style="position: relative; padding: 0;">
+    <div class="img-label"><div class="tag">空间模型</div></div>
+    <div class="img-hero">
+      <img src="../../content/assets/figs_11/spatial_model_arch.png" alt="空间自定位生成模型架构" />
+    </div>
+    <div class="img-title-overlay">
+      <h1>空间自定位生成模型</h1>
+      <p class="lead">编码器 · 定位头 · 生成头（扩散模型）</p>
+    </div>
+  </div>
+  <textarea id="speaker-notes" style="display:none">第三部分介绍空间自定位生成模型。任务定义是给定单细胞转录组数据，预测细胞在组织切片中的空间坐标，并生成对应的空间表达模式。模型架构包含三个部分：编码器将scRNA-seq表达矩阵映射到细胞嵌入，基于SCOPE的预训练权重；定位头从细胞嵌入预测2D或3D空间坐标；生成头结合空间坐标和细胞类型，使用扩散模型生成空间表达图。</textarea>
+</body>
+</html>

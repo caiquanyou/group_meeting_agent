@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>空间自定位测试结果</title>
+  <link rel="stylesheet" href="./shared.css" />
+  <style>
+    .img-hero {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.03);
+      border-radius: 24px;
+    }
+    .img-hero img { width: 100%; height: 100%; object-fit: contain; }
+    .img-label { position: absolute; top: 28px; left: 40px; z-index: 2; }
+    .img-title-overlay { position: absolute; bottom: 32px; left: 40px; z-index: 2; }
+    .img-title-overlay h1 {
+      margin: 0 0 0.25rem;
+      font-family: var(--font-serif);
+      font-size: clamp(22px, 2.5vw, 32px);
+      font-weight: 500;
+      color: var(--ivory);
+      text-shadow: 0 2px 12px rgba(0,0,0,0.6);
+    }
+    .img-title-overlay .lead {
+      margin: 0;
+      font-size: clamp(13px, 1.4vw, 17px);
+      color: rgba(255,255,255,0.85);
+      text-shadow: 0 1px 6px rgba(0,0,0,0.5);
+    }
+    .metrics-overlay {
+      position: absolute;
+      top: 28px;
+      right: 40px;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: flex-end;
+    }
+    .metric-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.55);
+      border: 1px solid rgba(255,255,255,0.15);
+      font-size: clamp(11px, 1.2vw, 14px);
+      color: var(--ivory);
+      backdrop-filter: blur(4px);
+    }
+    .metric-chip strong { color: #4ade80; }
+  </style>
+</head>
+<body class="theme-linear">
+  <div class="card" style="position: relative; padding: 0;">
+    <div class="img-label"><div class="tag">空间模型结果</div></div>
+
+    <div class="metrics-overlay">
+      <div class="metric-chip">中位误差 <strong>31.6μm</strong>（最优）</div>
+      <div class="metric-chip">Top-1 准确率 <strong>84.3%</strong></div>
+      <div class="metric-chip">FID <strong>18.4</strong>（vs. 34.7）</div>
+    </div>
+
+    <div class="img-hero">
+      <img src="../../content/assets/figs_12/spatial_results.png" alt="空间定位结果可视化" />
+    </div>
+
+    <div class="img-title-overlay">
+      <h1>空间自定位测试结果</h1>
+      <p class="lead">定位精度与生成质量 · MERFISH 小鼠脑数据集</p>
+    </div>
+  </div>
+  <textarea id="speaker-notes" style="display:none">这里展示空间自定位模型的测试结果。在MERFISH小鼠脑数据集上，我们的方法在中位误差指标上达到31.6微米，相比Tangram的48.3微米有显著提升。Top-1区域准确率达到84.3%，同样优于其他基线方法。在生成质量方面，空间表达图生成的FID分数为18.4，相比基线的34.7有明显改善；结构相似度SSIM达到0.82。</textarea>
+</body>
+</html>

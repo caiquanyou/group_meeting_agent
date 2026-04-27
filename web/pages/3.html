@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>单细胞多组学大模型背景</title>
+  <link rel="stylesheet" href="./shared.css" />
+  <style>
+    /* 图片页：图片占满全卡，文字最小化 */
+    .img-hero {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.03);
+      border-radius: 24px;
+    }
+    .img-hero img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    /* 叠加在图片上的小标签 */
+    .img-label {
+      position: absolute;
+      top: 28px;
+      left: 40px;
+      z-index: 2;
+    }
+    .img-title-overlay {
+      position: absolute;
+      bottom: 32px;
+      left: 40px;
+      z-index: 2;
+    }
+    .img-title-overlay h1 {
+      margin: 0 0 0.25rem;
+      font-family: var(--font-serif);
+      font-size: clamp(22px, 2.5vw, 32px);
+      font-weight: 500;
+      color: var(--ivory);
+      text-shadow: 0 2px 12px rgba(0,0,0,0.6);
+    }
+    .img-title-overlay .lead {
+      margin: 0;
+      font-size: clamp(13px, 1.4vw, 17px);
+      color: rgba(255,255,255,0.85);
+      text-shadow: 0 1px 6px rgba(0,0,0,0.5);
+    }
+  </style>
+</head>
+<body class="theme-linear">
+  <div class="card" style="position: relative; padding: 0;">
+    <div class="img-label"><div class="tag">研究背景</div></div>
+
+    <div class="img-hero">
+      <img src="../../content/assets/figs_03/scfoundation_background.png" alt="单细胞大模型研究背景" />
+    </div>
+
+    <div class="img-title-overlay">
+      <h1>单细胞多组学大模型</h1>
+      <p class="lead">单细胞测序的挑战与大模型的机遇</p>
+    </div>
+  </div>
+
+  <textarea id="speaker-notes" style="display:none">
+  首先来看为什么需要单细胞多组学大模型。单细胞测序面临几个核心挑战：第一是数据稀疏性，dropout事件导致大量零值；第二是批次效应，不同实验平台间存在系统性偏差；第三是多模态整合困难，RNA、ATAC、蛋白等模态联合分析很有挑战性；第四是细胞类型注释，跨数据集迁移标注成本很高。而大模型的出现为我们提供了新的机遇。预训练加微调的范式已经在自然语言处理和计算机视觉领域取得了突破，同时单细胞数据量级已经超过一千万细胞，足以支撑大规模预训练。我们可以把基因表达类比为细胞语言进行序列建模。
+  </textarea>
+</body>
+</html>
