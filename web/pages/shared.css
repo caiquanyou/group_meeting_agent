@@ -52,6 +52,7 @@ body {
   font-family: var(--font-sans);
   background: var(--parchment);
   color: var(--anthropic-near-black);
+  /* Conflict resolution: keep fullscreen slides fixed to viewport (no page scroll). */
   overflow: hidden;
   line-height: 1.6;
   position: relative;
