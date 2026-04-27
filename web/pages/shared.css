@@ -52,9 +52,6 @@ body {
   font-family: var(--font-sans);
   background: var(--parchment);
   color: var(--anthropic-near-black);
-  display: flex;
-  align-items: center;
-  justify-content: center;
   overflow: hidden;
   line-height: 1.6;
   position: relative;
@@ -94,13 +91,14 @@ body.theme-linear {
    ============================================================================ */
 
 .slide-container {
-  width: min(1400px, 92vw);
-  height: min(820px, 88vh);
-  padding: 56px 72px;
-  border-radius: 24px;
+  width: 100%;
+  height: 100vh;
+  max-height: 100vh;
+  padding: clamp(24px, 4vw, 56px) clamp(24px, 5vw, 72px);
+  border-radius: 0;
   background: var(--ivory);
-  border: 1px solid var(--border-cream);
-  box-shadow: rgba(0, 0, 0, 0.06) 0px 8px 32px;
+  border: 0;
+  box-shadow: none;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -297,14 +295,15 @@ body.theme-linear .byline__value {
    ============================================================================ */
 
 .card {
-  width: min(1320px, 90vw);
-  height: min(760px, 84vh);
+  width: 100%;
+  height: 100vh;
+  max-height: 100vh;
   box-sizing: border-box;
-  padding: 48px 56px 40px;
-  border-radius: 24px;
+  padding: clamp(24px, 4vw, 48px) clamp(24px, 5vw, 56px) clamp(24px, 4vw, 40px);
+  border-radius: 0;
   background: var(--ivory);
-  border: 1px solid var(--border-cream);
-  box-shadow: rgba(0, 0, 0, 0.06) 0px 8px 32px;
+  border: 0;
+  box-shadow: none;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -1242,6 +1241,51 @@ body.theme-linear .img-fill {
 
 body.theme-linear .img-caption {
   color: var(--warm-silver);
+}
+
+/* ============================================================================
+   Full-screen image slide layout (avoid image/text overlap)
+   ============================================================================ */
+.card.image-slide {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 16px;
+}
+
+.card.image-slide .img-label,
+.card.image-slide .img-title-overlay {
+  position: static !important;
+  z-index: auto !important;
+}
+
+.card.image-slide .img-title-overlay {
+  margin-top: 8px;
+}
+
+.card.image-slide .img-title-overlay h1 {
+  font-size: clamp(20px, 2.1vw, 30px) !important;
+}
+
+.card.image-slide .img-title-overlay .lead {
+  font-size: clamp(12px, 1.1vw, 16px) !important;
+  line-height: 1.45;
+}
+
+.card.image-slide .img-hero,
+.card.image-slide .img-grid {
+  position: static !important;
+  inset: auto !important;
+  height: 100%;
+  min-height: 0;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.card.image-slide .img-hero img,
+.card.image-slide .img-grid img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 /* Responsive typography enforcement */
