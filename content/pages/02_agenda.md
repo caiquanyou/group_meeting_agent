@@ -11,6 +11,7 @@ theme: default
 1. **单细胞多组学大模型**
    - 单细胞大模型背景
    - 之前的工作SCARF
+   - Transformer建模范式
    - SCARF的结果与问题
    - SCOPE-X的研究方向定位
    - SCOPE的进展
