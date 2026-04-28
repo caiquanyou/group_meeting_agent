@@ -307,7 +307,7 @@ body.theme-linear .byline__value {
   box-shadow: none;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow: auto;
 }
 
 body.theme-linear .card {
