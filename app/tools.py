@@ -175,15 +175,24 @@ class ToolRegistry:
                 return "PPT page data is not available yet."
 
             if self.presenter.page != target_page:
-                await self._jump_to_page(target_page, timeout=3.0)
+                changed = await self._jump_to_page(target_page, timeout=3.0)
+                if not changed and self.presenter.page != target_page:
+                    self.state.mode = AppMode.IDLE
+                    self.presenter.auto_play = False
+                    return f"Failed to navigate to page {target_page}. Please ensure the PPT client is connected and reporting page data."
+
+            if self.presenter.page is None:
+                self.state.mode = AppMode.IDLE
+                self.presenter.auto_play = False
+                return "PPT page data is not available yet."
 
             self.state.mode = AppMode.PRESENTING
             self.state.presentation_started = True
             self.state.presentation_finished = False
             self.presenter.auto_play = True
             await self.presenter.start(0)
-            self._log_state("presentation_start.after", from_page=from_page)
-            return f"Presentation started from page {self.presenter.page}."
+            self._log_state("presentation_start.after", from_page=from_page, started_page=self.presenter.page)
+            return f"Presentation started from page {target_page}."
 
         @tool("presentation_pause", description="Pause the presentation, keep the resume point, and enter interrupted QA.")
         async def presentation_pause(save_resume_point: bool = True) -> str:
