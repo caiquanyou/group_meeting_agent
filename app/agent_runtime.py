@@ -67,26 +67,37 @@ Rules:
 
 ## Slide Anchors And Jump Rule
 
-During defense QA, after receiving a question, immediately call `presentation_jump_for_qa(page=N)` according to the mapping below. Do not first deliberate about whether a jump is necessary. Use the content-to-page mapping below as the default routing rule.
+Use the mapping below as the default QA routing rule, but apply intent gating first.
+
+Intent gating before any QA jump:
+1) If the user intent is presentation-flow control (continue, resume, keep going, replay, restart, start from page N and continue), do not use `presentation_jump_for_qa`; use resume/start/navigation tools instead.
+2) If the user asks only page navigation without requesting explanation, use jump-and-hold or `ppt_navigate`.
+3) Only when the user is asking a substantive defense question, route with `presentation_jump_for_qa(page=N)`.
+
+When it is a substantive QA question:
+- Match the question to the mapping below.
+- Call `presentation_jump_for_qa(page=N)` first.
+- Then answer briefly on-slide.
+- Do not explain the jump before calling the tool.
+
+If multiple pages are relevant, choose the most specific technical page first (method/results > overview/summary).
+If no keyword matches, stay on current context and answer directly without forced jumping.
 
 | Page | Slide Topic | Trigger Keywords |
 |------|-------------|------------------|
-| 2 | Background and motivation | 最开始的地方、研究背景、任务动机、为什么做这个、问题重要性 |
-| 3 | Core conflict of existing methods | 已有方法的弊端、推理速度很慢、autoregressive 太慢、现有方法不足 |
-| 4 | Problem analysis | 直接回归审稿分数、置信度被忽略、评分尺度不一致、为什么不直接回归 |
-| 5 | Method overview | 方法细节、框架结构、模型结构、整体思路、你的方法是什么 |
-| 6 | RTS | RTS、带噪观察、置信度、概率聚合、监督信号、交互图、拖动滑轨、高斯分布 |
-| 7 | NAIDv2 dataset | 数据集、NAIDv2、数据怎么来、怎么构造、数据来源 |
-| 8 | Training setup and implementation details | 训练设置、实验设置、超参数、实现细节、训练资源 |
-| 9 | Main results | 主结果、主表、效果提升、和谁比更强、性能对比 |
-| 10 | Paradigm comparison | pointwise、pairwise、复杂度、为什么训练和推理不一样、范式对比 |
-| 11 | Clustering and grouping analysis | 聚类、domain-year、分组策略、去偏分组、聚类粒度 |
-| 12 | Data efficiency analysis | 数据效率、pair 数量够不够、训练多少 pair、样本效率 |
-| 13 | Generalization analysis | 泛化、NeurIPS、跨会议、跨 venue |
-| 14 | Summary and contributions | 贡献、总结、到底解决了什么、核心贡献 |
-
-Execution logic: match the question to the mapping above -> immediately call `presentation_jump_for_qa(page=N)` -> answer on-slide after the jump. Do not explain the jump before calling the tool.
-
+| 2 | Agenda / 汇报提纲 | 提纲、目录、今天讲什么、汇报结构、章节安排 |
+| 3 | 单细胞多组学大模型背景 | 背景、领域背景、单细胞、多组学、大模型、scFoundation、为什么重要 |
+| 4 | 之前工作 SCARF | SCARF、之前工作、已有方案、你们以前怎么做、基线方法 |
+| 5 | SCARF 的问题 | SCARF有什么问题、局限、瓶颈、为什么不够好、痛点 |
+| 6 | SCOPE-X 研究方向定位 | SCOPE-X定位、研究方向、目标、整体定位、要解决什么 |
+| 7 | SCOPE-X 进展 | 进展、当前完成了什么、里程碑、阶段性成果 |
+| 8 | 单细胞组学分析智能体 | 智能体、agent、系统框架、流程、模块、工具调用 |
+| 9 | 与现有工作的对比 | 对比、与现有方法相比、优势、差异、竞品、benchmark |
+| 10 | 智能体测试结果（Classic） | classic结果、传统流程结果、测试结果、实验结果、性能 |
+| 11 | 智能体测试结果（Agentic） | agentic结果、自主流程结果、测试结果、性能提升、成功率 |
+| 12 | 空间自定位生成模型 | 空间自定位、空间模型、生成模型、空间任务、spatial |
+| 13 | 空间自定位测试结果 | 空间测试、空间结果、可视化效果、定位精度、评估指标 |
+| 14 | 小鼠单细胞时序模型 | 小鼠、时序模型、时间动态、轨迹建模、temporal |
 """.strip()
 
 
