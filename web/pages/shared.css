@@ -57,6 +57,10 @@ body {
   position: relative;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 /* ============================================================================
    Robot Logo — Top Right Corner
    ============================================================================ */
@@ -229,6 +233,12 @@ body.theme-linear .panel {
   padding: 64px 80px;
 }
 
+.panel--compact {
+  width: min(1320px, 92vw);
+  height: min(800px, 88vh);
+  padding: clamp(28px, 3vw, 44px) clamp(28px, 3.6vw, 56px);
+}
+
 .panel--title h1 {
   font-size: clamp(2.75rem, 5vw, 4rem); /* 44px - 64px */
   line-height: 1.10;
@@ -254,6 +264,62 @@ body.theme-linear .eyebrow {
   font-size: clamp(20px, 2.2vw, 26px);
   line-height: 1.60;
   color: var(--dark-warm);
+}
+
+.agenda-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(14px, 1.8vw, 22px);
+  margin-top: 1.25rem;
+  text-align: left;
+}
+
+.agenda-item {
+  min-height: 0;
+  padding: clamp(12px, 1.4vw, 18px) clamp(14px, 1.6vw, 20px);
+  border-radius: 14px;
+  background: var(--ivory);
+  border: 1px solid var(--border-dark);
+  box-shadow: var(--dark-surface) 0px 0px 0px 0px, rgba(176, 174, 165, 0.26) 0px 0px 0px 1px;
+}
+
+.agenda-item h3 {
+  margin-bottom: 0.45rem;
+  font-size: clamp(20px, 2.1vw, 26px);
+}
+
+.agenda-item ul {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.agenda-item li {
+  font-size: clamp(14px, 1.2vw, 17px);
+  line-height: 1.45;
+  color: var(--warm-silver);
+  margin: 0.16rem 0;
+}
+
+.title-meta {
+  width: min(900px, 86%);
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border-warm);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  row-gap: 10px;
+  column-gap: 28px;
+  text-align: left;
+}
+
+.title-meta .byline__label {
+  font-size: 13px;
+  letter-spacing: 0.08em;
+}
+
+.title-meta .byline__value {
+  font-size: clamp(18px, 2vw, 24px);
 }
 
 body.theme-linear .subtitle {

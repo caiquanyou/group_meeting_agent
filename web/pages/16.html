@@ -7,25 +7,24 @@
   <link rel="stylesheet" href="./shared.css" />
   <style>
     body.theme-linear {
-      background:
-        radial-gradient(700px 420px at 18% 20%, rgba(201, 100, 66, 0.14), transparent 60%),
-        radial-gradient(820px 460px at 82% 78%, rgba(16, 185, 129, 0.10), transparent 58%),
-        linear-gradient(135deg, #0b1220, #162033 48%, #0f172a);
+      background: var(--parchment);
+      color: var(--anthropic-near-black);
     }
     .slide-qa {
       position: relative;
-      width: min(1320px, 90vw);
+      width: min(1280px, 90vw);
       height: min(760px, 84vh);
       border-radius: 24px;
       overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.10);
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+      background: var(--ivory);
+      border: 1px solid var(--border-cream);
+      box-shadow: rgba(0, 0, 0, 0.05) 0px 4px 24px;
     }
     .grid-lines {
+      opacity: 0.35;
       position: absolute;
       inset: 0;
       background-image:
@@ -58,16 +57,16 @@
     .qa-title {
       margin: 28px 0 14px;
       font-family: var(--font-serif);
-      font-size: clamp(64px, 8vw, 100px);
+      font-size: clamp(58px, 7vw, 88px);
       line-height: 1.04;
       font-weight: 500;
-      color: #ffffff;
+      color: var(--anthropic-near-black);
     }
     .qa-subtitle {
       margin: 0 0 28px;
       font-family: var(--font-sans);
       font-size: clamp(18px, 2vw, 24px);
-      color: var(--warm-silver);
+      color: var(--olive-gray);
     }
     .contact-row {
       display: flex;
@@ -81,14 +80,14 @@
       gap: 8px;
       padding: 10px 18px;
       border-radius: 12px;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: var(--pure-white);
+      border: 1px solid var(--border-warm);
       font-family: var(--font-sans);
       font-size: 15px;
-      color: var(--warm-silver);
+      color: var(--olive-gray);
     }
     .contact-chip strong {
-      color: var(--ivory);
+      color: var(--anthropic-near-black);
     }
   </style>
 </head>
